@@ -1,18 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package pa.peleadesumos.Cliente.Vista;
 
 /**
  *
- * @author Asus
+ * @author Valen Aguilar
  */
 public class CVentana extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Ventana
-     */
+    
     public CVentana() {
         initComponents();
     }
@@ -41,11 +36,6 @@ public class CVentana extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
