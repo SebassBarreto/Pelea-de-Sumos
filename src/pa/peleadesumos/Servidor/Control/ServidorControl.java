@@ -4,10 +4,45 @@
  */
 package pa.peleadesumos.Servidor.Control;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
- *
- * @author Asus
+ * Clase encargada de gestionar el ServerSocket del servidor.
+ * Acepta exactamente dos conexiones y lanza un hilo por cada luchador.
+ * @author sebastian
  */
 public class ServidorControl {
+    //Socket del servidor
+    private SControlPrincipal sControlPrincipal;
+    private ServerSocket serverSocket;
+    private int puerto;
+
+    public ServidorControl(SControlPrincipal sControlPrincipal) {
+        this.sControlPrincipal = sControlPrincipal;
+
+    }
     
+    /**
+     * Abre el ServerSocket en el puerto indicado.
+     * @throws IOException si no se puede abrir el puerto
+     */
+    public void iniciarServidor() throws IOException{
+        serverSocket = new ServerSocket(puerto);
+    }
+    
+    /**
+     * Acepta dos conexiones y lanza un SHiloLuchador por cada una
+     * @throws IOException
+     */
+    public void aceptarConexiones() throws IOException{
+        int contadorClientes = 0;
+        while(contadorClientes < 2){
+            Socket socket = serverSocket.accept();
+         //   SHiloLuchador hilo = new SHiloLuchador(socket);
+       //     new Thread(hilo).start();
+            contadorClientes++;
+        }
+    }
 }

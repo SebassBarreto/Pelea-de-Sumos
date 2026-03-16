@@ -4,10 +4,44 @@
  */
 package pa.peleadesumos.Servidor.Control;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+
 /**
- *
- * @author Asus
+ * Hilo encargado de atender a un luchador conectado via socket.
+ * Recibe los datos del luchador, lo sube al dojo y ejecuta su turno en el combate.
+ * @author sebastian
  */
-public class SHiloLuchador {
+public class SHiloLuchador implements Runnable{
+
+    private Socket socket;
+    private SControlPrincipal controlPrincipal;
+
+    public SHiloLuchador(SControlPrincipal controlPrincipal) {
+        this.controlPrincipal = controlPrincipal;
+        this.socket = socket;
+
+    }
+    
+    
+    @Override
+    public void run() {
+        try{
+      
+        } catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try{
+                socket.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    
     
 }

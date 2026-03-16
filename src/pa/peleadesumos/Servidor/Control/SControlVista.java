@@ -10,4 +10,12 @@ package pa.peleadesumos.Servidor.Control;
  */
 public class SControlVista {
     
+    private SControlPrincipal controlPrincipal;
+
+    public SControlVista(SControlPrincipal controlPrincipal) {
+        this.controlPrincipal = controlPrincipal;
+    }
+    
+    
+    
 }
