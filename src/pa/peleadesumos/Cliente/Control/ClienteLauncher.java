@@ -5,7 +5,7 @@ package pa.peleadesumos.Cliente.Control;
  *
  * @author Asus
  */
-public class CLauncher {
+public class ClienteLauncher {
     
     public static void main(String[] args) {
         new CControlPrincipal();
