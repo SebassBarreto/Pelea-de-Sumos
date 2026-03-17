@@ -1,11 +1,11 @@
 package pa.peleadesumos.Cliente.Control;
 
 public class CControlPrincipal {
-    private CControlLuchador ccl;
+    private CControl ccl;
     private CControlVista ccv;
     
     public CControlPrincipal(){
-        ccl = new CControlLuchador(this);
+        ccl = new CControl(this);
         ccv = new CControlVista(this);
     }
 }
