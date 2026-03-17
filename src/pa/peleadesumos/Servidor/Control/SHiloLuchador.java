@@ -26,7 +26,9 @@ public class SHiloLuchador implements Runnable{
 
     }
     
-    
+ /**
+  * 
+  */   
     @Override
     public void run() {
         try{
