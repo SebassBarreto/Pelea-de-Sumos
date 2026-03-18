@@ -6,11 +6,11 @@ package pa.peleadesumos.Servidor.Control;
  *
  * @author Asus
  */
-public class SControlDojo {
+public class ControlDojo {
     
     private SControlPrincipal sControlPrincipal;
 
-    public SControlDojo(SControlPrincipal sControlPrincipal) {
+    public ControlDojo(SControlPrincipal sControlPrincipal) {
         this.sControlPrincipal = sControlPrincipal;
     }
     

@@ -7,15 +7,17 @@ package pa.peleadesumos.Servidor.Control;
  */
 public class SControlPrincipal {
       
-    private SControlDojo sControlDojo;
+    private ControlDojo controlDojo;
+    private ControlLuchador controlLuchador;
+    private SContolSocket sControlSocket;
     private SControlVista sControlVista;
-    private ServidorControl servidorControl;
     private SHiloLuchador sHiloLuchador;
 
     public SControlPrincipal() {
-        sControlDojo = new SControlDojo(this);
+        controlLuchador = new ControlLuchador(this);
+        controlDojo = new ControlDojo(this);
         sControlVista = new SControlVista(this);
-        servidorControl = new ServidorControl(this);
+        sControlSocket = new SContolSocket(this);
         sHiloLuchador = new SHiloLuchador(this);
         
     }

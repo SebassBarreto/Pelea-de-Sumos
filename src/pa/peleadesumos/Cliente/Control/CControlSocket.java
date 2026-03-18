@@ -1,0 +1,18 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package pa.peleadesumos.Cliente.Control;
+
+/**
+ *
+ * @author Asus
+ */
+public class CControlSocket {
+    
+    private CControlPrincipal ccp;
+    
+    public CControlSocket(CControlPrincipal aThis) {
+    }
+    
+}

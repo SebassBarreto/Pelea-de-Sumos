@@ -13,13 +13,14 @@ import java.net.Socket;
  * Acepta exactamente dos conexiones y lanza un hilo por cada luchador.
  * @author sebastian
  */
-public class ServidorControl {
-    //Socket del servidor
+public class SContolSocket {
+    
     private SControlPrincipal sControlPrincipal;
+    //Socket del servidor
     private ServerSocket serverSocket;
     private int puerto;
 
-    public ServidorControl(SControlPrincipal sControlPrincipal) {
+    public SContolSocket(SControlPrincipal sControlPrincipal) {
         this.sControlPrincipal = sControlPrincipal;
 
     }
