@@ -1,5 +1,7 @@
-
 package pa.peleadesumos.Cliente.Control;
+
+import pa.peleadesumos.Cliente.Vista.CVentana;
+
 
 /**
  *

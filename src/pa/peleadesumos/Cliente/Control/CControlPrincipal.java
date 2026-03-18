@@ -9,8 +9,16 @@ public class CControlPrincipal {
         cControlVista = new CControlVista(this);
         cControlSocket = new CControlSocket(this);
     }
-    public void recibirDatosLuchador(String[] datos){
-       // this.datosLuchador = datos;
-        //Aquí faltaría un método de la clase conexión socket del cliente que reciba como parámetro el arreglo
+
+    void cargarTecnicas(String ruta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    void confirmarTecnicas(String[] tecnicas) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    void conectarYPelear(String nombre, String peso, String combates) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
