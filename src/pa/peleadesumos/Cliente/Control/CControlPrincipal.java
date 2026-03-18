@@ -1,24 +1,104 @@
 package pa.peleadesumos.Cliente.Control;
 
-public class CControlPrincipal { 
-    
-    private CControlSocket cControlSocket;
+import java.io.IOException;
+import pa.peleadesumos.Cliente.Modelo.CnxProperties;
+import pa.peleadesumos.Cliente.Modelo.CnxSocket;
+
+public class CControlPrincipal {
+
     private CControlVista cControlVista;
-    
-    public CControlPrincipal(){
+    private CControlSocket cControlSocket;
+
+    private String[] tecnicasSeleccionadas;
+    private String rutaProperties;
+
+    public CControlPrincipal() {
         cControlVista = new CControlVista(this);
         cControlSocket = new CControlSocket(this);
+        cControlVista.mostrarVentana();
     }
 
-    void cargarTecnicas(String ruta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Solicita al usuario seleccionar el properties carga la configuracion del
+     * socket y las categorias disponibles
+     */
+    public void seleccionarProperties() {
+
+        rutaProperties = cControlVista.seleccionar("Seleccione el archivo de configuracion del cliente: ");
+
+        if (rutaProperties != null) {
+            try {
+                //le carga los datos a todo
+                CnxProperties.cargaConfiguracion(rutaProperties);
+                CnxSocket.configurarSocket(CnxProperties.getIp(), CnxProperties.getPuerto());
+                cargarCategorias(rutaProperties);
+                cControlVista.setRutaProperties(rutaProperties);
+            } catch (IOException e) {
+                cControlVista.mostrarAdvertencia("Error al cargar el archivo properties.");
+            }
+        }
+
     }
 
-    void confirmarTecnicas(String[] tecnicas) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Carga las categorias disponibles y las muestra en la vista
+     *
+     * @param rutaProperties
+     */
+    public void cargarCategorias(String rutaProperties) {
+        try {
+            String[] categorias = CnxProperties.cargarCategorias(rutaProperties);
+            cControlVista.cargarCategorias(categorias);
+        } catch (IOException e) {
+            cControlVista.mostrarAdvertencia("Error al cargar las categorias");
+        }
     }
 
-    void conectarYPelear(String nombre, String peso, String combates) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Carga los kimarites de una categoria y los muestra en la vista
+     *
+     * @param rutaProperties
+     * @param categoriaId
+     */
+    public void cargarKimaritesPorCategoria(String rutaProperties, String categoriaId) {
+        try {
+            CnxProperties.cargarKimarites(rutaProperties, categoriaId);
+            cControlVista.cargarKimaritesPorCategoria(CnxProperties.getKimarites());
+        } catch (IOException e) {
+            cControlVista.mostrarAdvertencia("Error al cargar los kimarites");
+        }
+
     }
+
+    /**
+     * Guarda las tecnicas seleccioandas por el luchador
+     *
+     * @param tecnicas
+     */
+    public void confirmarTecnicas(String[] tecnicas) {
+        this.tecnicasSeleccionadas = tecnicas;
+    }
+
+    public void conectarYPelear(String nombre, String peso, String combates) {
+        if (tecnicasSeleccionadas == null || tecnicasSeleccionadas.length == 0) {
+            cControlVista.mostrarAdvertencia("Debe confirmar sus tecnicas antes de pelear.");
+            return;
+        }
+        if (nombre.trim().isEmpty() || peso.trim().isEmpty() || combates.trim().isEmpty()) {
+            cControlVista.mostrarAdvertencia("Debe completar todos los campos.");
+            return;
+        }
+        try {
+            float pesoFloat = Float.parseFloat(peso);
+            int combatesInt = Integer.parseInt(combates);
+            cControlSocket.enviarLuchador(nombre, pesoFloat, combatesInt, tecnicasSeleccionadas);
+            String resultado = cControlSocket.esperarResultado();
+            cControlVista.mostrarResultado(resultado);
+        } catch (NumberFormatException e) {
+            cControlVista.mostrarAdvertencia("Peso y combates deben ser numericos flotante y entero respectivamente");
+        } catch (IOException e) {
+            cControlVista.mostrarAdvertencia("Error de conexion con el servidor");
+        }
+    }
+
 }

@@ -1,7 +1,10 @@
 package pa.peleadesumos.Cliente.Control;
 
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JCheckBox;
 import pa.peleadesumos.Cliente.Vista.CVentana;
 import pa.peleadesumos.Cliente.Vista.Emergente;
 import pa.peleadesumos.Cliente.Vista.PanelFormulario;
@@ -47,6 +50,11 @@ public class CControlVista implements ActionListener {
     private Emergente emergente;
 
     /**
+     * Ruta del properties cargado
+     */
+    private String rutaProperties;
+
+    /**
      * Constructor de CControlVista.
      *
      * @param controlPrincipal control principal del cliente
@@ -69,10 +77,14 @@ public class CControlVista implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("CargarTecnicas")) {
-            String ruta = seleccionarArchivo.seleccionarProperties(
-                    "Seleccione el archivo de tecnicas kimarite");
-            if (ruta != null) {
-                controlPrincipal.cargarTecnicas(ruta);
+            controlPrincipal.seleccionarProperties();
+
+        } else if (e.getActionCommand().equalsIgnoreCase("SeleccionarCategoria")) {
+            if (rutaProperties != null) {
+                String categoriaId = panelTecnicas.getCategoriaSeleccionada();
+                if (categoriaId != null) {
+                    controlPrincipal.cargarKimaritesPorCategoria(rutaProperties, categoriaId);
+                }
             }
 
         } else if (e.getActionCommand().equalsIgnoreCase("ConfirmarTecnicas")) {
@@ -85,17 +97,57 @@ public class CControlVista implements ActionListener {
             }
 
         } else if (e.getActionCommand().equalsIgnoreCase("Pelear")) {
-            controlPrincipal.conectarYPelear(panelFormulario.getNombre(), panelFormulario.getPeso(), panelFormulario.getCombates());
+            controlPrincipal.conectarYPelear(
+                    panelFormulario.getNombre(),
+                    panelFormulario.getPeso(),
+                    panelFormulario.getCombates()
+            );
         }
     }
 
     /**
-     * Muestra las tecnicas cargadas en el panel de tecnicas.
+     * Carga las categorias en el combobox del panel de tecnicas.
      *
-     * @param tecnicas arreglo de tecnicas del properties
+     * @param categorias arreglo con los ids de las categorias
      */
-    public void mostrarTecnicas(String[] tecnicas) {
-        ventana.cargarTecnicas(tecnicas);
+    public void cargarCategorias(String[] categorias) {
+        panelTecnicas.getComboCategorias().removeAllItems();
+        for (String categoria : categorias) {
+            panelTecnicas.getComboCategorias().addItem(categoria);
+        }
+        ventana.mostrarPanelTecnicas();
+    }
+
+    /**
+     * Carga los kimarites de una categoria en los checkboxes.
+     *
+     * @param kimarites arreglo de kimarites de la categoria
+     */
+    public void cargarKimaritesPorCategoria(String[] kimarites) {
+        if (panelTecnicas.getCheckboxes() != null) {
+            for (JCheckBox cb : panelTecnicas.getCheckboxes()) {
+                if (cb.isSelected() && !panelTecnicas.getTecnicasAcumuladas().contains(cb.getText())) {
+                    panelTecnicas.getTecnicasAcumuladas().add(cb.getText());
+                } else if (!cb.isSelected()) {
+                    panelTecnicas.getTecnicasAcumuladas().remove(cb.getText());
+                }
+            }
+        }
+        panelTecnicas.getPanelCheckboxes().removeAll();
+        panelTecnicas.getPanelCheckboxes().setLayout(new GridLayout(kimarites.length, 1));
+        JCheckBox[] nuevos = new JCheckBox[kimarites.length];
+        for (int i = 0; i < kimarites.length; i++) {
+            nuevos[i] = new JCheckBox(kimarites[i].trim());
+            nuevos[i].setOpaque(false);
+            nuevos[i].setFont(new Font("Arial", Font.PLAIN, 13));
+            if (panelTecnicas.getTecnicasAcumuladas().contains(kimarites[i].trim())) {
+                nuevos[i].setSelected(true);
+            }
+            panelTecnicas.getPanelCheckboxes().add(nuevos[i]);
+        }
+        panelTecnicas.setCheckboxes(nuevos);
+        panelTecnicas.getPanelCheckboxes().revalidate();
+        panelTecnicas.getPanelCheckboxes().repaint();
     }
 
     /**
@@ -108,9 +160,37 @@ public class CControlVista implements ActionListener {
     }
 
     /**
+     * Muestra un mensaje de advertencia al usuario.
+     *
+     * @param mensaje texto de advertencia
+     */
+    public void mostrarAdvertencia(String mensaje) {
+        emergente.mostrarAdvertencia(mensaje);
+    }
+
+    /**
+     * Permite seleccionar un archivo properties.
+     *
+     * @param titulo titulo del dialogo
+     * @return ruta del archivo seleccionado
+     */
+    public String seleccionar(String titulo) {
+        return seleccionarArchivo.seleccionarProperties(titulo);
+    }
+
+    /**
      * Hace visible la ventana principal del cliente.
      */
     public void mostrarVentana() {
         ventana.setVisible(true);
+    }
+
+    /**
+     * Establece la ruta del archivo properties cargado.
+     *
+     * @param ruta ruta del archivo properties
+     */
+    public void setRutaProperties(String ruta) {
+        this.rutaProperties = ruta;
     }
 }

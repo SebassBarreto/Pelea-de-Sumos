@@ -20,7 +20,7 @@ public class CnxSocket {
      * @param ip Ip del servidor
      * @param puerto Puerto del servidor
      */
-    public static void configurarSocker(String ip, int puerto) {
+    public static void configurarSocket(String ip, int puerto) {
         CnxSocket.ipServidor = ip;
         CnxSocket.puertoServidor = puerto;
     }

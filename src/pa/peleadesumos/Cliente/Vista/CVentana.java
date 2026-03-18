@@ -6,33 +6,51 @@ import javax.swing.JPanel;
 import pa.peleadesumos.Cliente.Control.CControlVista;
 
 /**
- * Ventana principal del cliente.
- * Contiene el panel de fondo, el formulario y el panel de tecnicas.
+ * Ventana principal del cliente. Contiene el panel de fondo, el formulario y el
+ * panel de tecnicas.
+ *
  * @author Asus
  */
 public class CVentana extends JFrame {
 
-    /** Panel de fondo */
+    /**
+     * Panel de fondo
+     */
     private PanelFondo panelFondo;
 
-    /** Panel del formulario */
+    /**
+     * Panel del formulario
+     */
     private PanelFormulario panelFormulario;
 
-    /** Panel de tecnicas */
+    /**
+     * Panel de tecnicas
+     */
     private PanelTecnicas panelTecnicas;
 
-    /** Layout para alternar entre formulario y tecnicas */
+    /**
+     * Layout para alternar entre formulario y tecnicas
+     */
     private CardLayout cardLayout;
 
-    /** Panel contenedor con CardLayout */
+    /**
+     * Panel contenedor con CardLayout
+     */
     private JPanel panelContenedor;
 
-    /** Constantes para el CardLayout */
+    /**
+     * Constante para el panel formulario
+     */
     private static final String FORMULARIO = "FORMULARIO";
+
+    /**
+     * Constante para el panel tecnicas
+     */
     private static final String TECNICAS = "TECNICAS";
 
     /**
      * Constructor de CVentana.
+     *
      * @param controlVista control de vista del cliente
      * @param panelFormulario panel del formulario creado en CControlVista
      * @param panelTecnicas panel de tecnicas creado en CControlVista
@@ -53,7 +71,7 @@ public class CVentana extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        panelFondo = new PanelFondo();
+        panelFondo = new PanelFondo("Imgs/sumofondo.jpg");
         panelFondo.setBounds(0, 0, 800, 600);
 
         cardLayout = new CardLayout();
@@ -86,10 +104,14 @@ public class CVentana extends JFrame {
 
     /**
      * Carga las tecnicas en el panel de tecnicas y lo muestra.
+     *
      * @param tecnicas arreglo de tecnicas del properties
      */
     public void cargarTecnicas(String[] tecnicas) {
-        panelTecnicas.cargarTecnicas(tecnicas);
+        panelTecnicas.getComboCategorias().removeAllItems();
+        for (String tecnica : tecnicas) {
+            panelTecnicas.getComboCategorias().addItem(tecnica);
+        }
         mostrarPanelTecnicas();
     }
 }
