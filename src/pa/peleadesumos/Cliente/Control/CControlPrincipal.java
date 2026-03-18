@@ -7,14 +7,14 @@ import pa.peleadesumos.Cliente.Modelo.CnxSocket;
 public class CControlPrincipal {
 
     private CControlVista cControlVista;
-    private CControlSocket cControlSocket;
+    private ControlCliente controlCliente;
 
     private String[] tecnicasSeleccionadas;
     private String rutaProperties;
 
     public CControlPrincipal() {
         cControlVista = new CControlVista(this);
-        cControlSocket = new CControlSocket(this);
+        controlCliente = new ControlCliente(this);
         cControlVista.mostrarVentana();
     }
 
@@ -91,14 +91,24 @@ public class CControlPrincipal {
         try {
             float pesoFloat = Float.parseFloat(peso);
             int combatesInt = Integer.parseInt(combates);
-            cControlSocket.enviarLuchador(nombre, pesoFloat, combatesInt, tecnicasSeleccionadas);
-            String resultado = cControlSocket.esperarResultado();
+            controlCliente.enviarLuchador(nombre, pesoFloat, combatesInt, tecnicasSeleccionadas);
+            String resultado = esperarResultado();
             cControlVista.mostrarResultado(resultado);
         } catch (NumberFormatException e) {
             cControlVista.mostrarAdvertencia("Peso y combates deben ser numericos flotante y entero respectivamente");
         } catch (IOException e) {
             cControlVista.mostrarAdvertencia("Error de conexion con el servidor");
         }
+    }
+    
+    /**
+     * Espera y retorna el resultado del combate enviado por el servidor
+     *
+     * @return "GANASTE O PERDISTE" obviamente este mensaje se manda por vista
+     * @throws IOException
+     */
+    public String esperarResultado() throws IOException {
+        return controlCliente.getInputStream().readUTF();
     }
 
 }

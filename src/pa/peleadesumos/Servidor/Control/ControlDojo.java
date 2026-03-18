@@ -74,7 +74,7 @@ public class ControlDojo {
 
                 //EJECUTAR KIMARITEEE
                 String kimarite = obtenerKimariteRandom(luchador.getKimarites());
-                sControlPrincipal.notficarKimarite(luchador, kimarite);
+                sControlPrincipal.notificarKimarite(luchador, kimarite);
 
                 //verificacion a ver si saco al rival
                 if (obtenerResultadoRandom()) {

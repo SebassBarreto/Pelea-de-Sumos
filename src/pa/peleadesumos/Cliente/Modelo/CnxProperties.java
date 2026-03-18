@@ -10,7 +10,7 @@ import java.util.Properties;
  * properties. Maneja tanto la configuracion de red como las tecnicas kimarite
  * por categoria.
  *
- * @author Asus
+ * @author Asus Sergio
  */
 public class CnxProperties {
 

@@ -1,4 +1,4 @@
-package pa.peleadesumos.Cliente.Vista;
+package pa.peleadesumos.Servidor.Vista;
 
 import java.awt.Graphics;
 import java.awt.Image;

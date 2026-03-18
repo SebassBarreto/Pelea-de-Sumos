@@ -102,7 +102,10 @@ public class CControlVista implements ActionListener {
                     panelFormulario.getPeso(),
                     panelFormulario.getCombates()
             );
-        }
+        } else if(e.getActionCommand().equalsIgnoreCase("Salir")){
+            emergente.confirmacionSalir();
+        } 
+        
     }
 
     /**

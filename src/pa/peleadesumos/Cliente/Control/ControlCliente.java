@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pa.peleadesumos.Cliente.Control;
 
 import java.io.DataInputStream;
@@ -16,7 +12,7 @@ import pa.peleadesumos.Cliente.Modelo.CnxSocket;
  *
  * @author Asus
  */
-public class CControlSocket {
+public class ControlCliente {
 
     private CnxSocket cnxSocket;
     private CControlPrincipal ccp;
@@ -26,7 +22,7 @@ public class CControlSocket {
      *
      * @param ccp
      */
-    public CControlSocket(CControlPrincipal ccp) {
+    public ControlCliente(CControlPrincipal ccp) {
         this.ccp = ccp;
         this.cnxSocket = new CnxSocket();
     }
@@ -59,15 +55,13 @@ public class CControlSocket {
     }
 
     /**
-     * Espera y retorna el resultado del combate enviado por el servidor
+     * Retorna el input stream del socket
      *
-     * @return "GANASTE O PERDISTE" obviamente este mensaje se manda por vista
-     * @throws IOException
+     * @return DataInputStream del socket
+     * @throws IOException si hay error
      */
-    public String esperarResultado() throws IOException {
-        Socket socket = cnxSocket.conexion();
-        DataInputStream dis = new DataInputStream(socket.getInputStream());
-        return dis.readUTF();
+    public DataInputStream getInputStream() throws IOException {
+        return new DataInputStream(cnxSocket.conexion().getInputStream());
     }
 
 }

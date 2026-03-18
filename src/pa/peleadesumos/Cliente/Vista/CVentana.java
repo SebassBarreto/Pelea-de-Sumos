@@ -67,17 +67,17 @@ public class CVentana extends JFrame {
     private void initComponentes() {
         setTitle("PeleaDeSumos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 650);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        panelFondo = new PanelFondo("Imgs/sumofondo.jpg");
-        panelFondo.setBounds(0, 0, 800, 600);
+        panelFondo = new PanelFondo("Imgs/fondocliente.jpg");
+        panelFondo.setBounds(0, 0, 800, 650);
 
         cardLayout = new CardLayout();
         panelContenedor = new JPanel(cardLayout);
         panelContenedor.setOpaque(false);
-        panelContenedor.setBounds(250, 50, 500, 500);
+        panelContenedor.setBounds(250, 30, 500, 560);
 
         panelContenedor.add(panelFormulario, FORMULARIO);
         panelContenedor.add(panelTecnicas, TECNICAS);
