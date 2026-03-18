@@ -12,11 +12,67 @@ import pa.peleadesumos.Servidor.Modelo.Luchador;
 public class ControlDojo {
     
     private SControlPrincipal sControlPrincipal;
-    private static boolean luchadorGano;
+    private Luchador[] luchadores = new Luchador[2];
+    private int contadorLuchadores = 0;
     private Luchador ganador;
+    private boolean combateTerminado = false;
 
     public ControlDojo(SControlPrincipal sControlPrincipal) {
         this.sControlPrincipal = sControlPrincipal;
+    }
+
+    /**
+     * Sube un luchador al dohyō. El primero hace wait() hasta que
+     * llegue el segundo. Cuando ambos están, notifyAll() inicia el combate.
+     * @param luchador el luchador que llega al dohyō
+     * @throws InterruptedException si el hilo es interrumpido mientras espera
+     */
+    public synchronized void subirLuchador(Luchador luchador) throws InterruptedException {
+        luchadores[contadorLuchadores] = luchador;
+        contadorLuchadores++;
+
+        if (contadorLuchadores < 2) {
+            wait();
+        } else {
+            notifyAll();
+        }
+    }
+
+    /**
+     * Ejecuta el turno del luchador que lo llama. Solo un hilo puede
+     * estar aquí a la vez gracias a synchronized. El que termina su
+     * movimiento cede la llave con notifyAll() + wait().
+     * @param luchador el luchador que ejecuta el turno
+     * @throws InterruptedException si el hilo es interrumpido mientras espera
+     */
+    public synchronized void ejecutarTurno(Luchador luchador) throws InterruptedException {
+        if (combateTerminado) return;
+
+        String kimarite = obtenerKimariteRandom(luchador.getKimarites());
+        boolean saco = obtenerResultadoRandom();
+
+        if (saco) {
+            ganador = luchador;
+            combateTerminado = true;
+            notifyAll();
+            return;
+        }
+
+        long espera = ThreadLocalRandom.current().nextLong(500);
+        notifyAll();
+        wait(espera);
+    }
+
+    /**
+     * Retorna el luchador ganador del combate.
+     * @return el luchador que ganó
+     */
+    public Luchador determinarGanador() {
+        return ganador;
+    }
+
+    public boolean isCombateTerminado() {
+        return combateTerminado;
     }
     
     public static String obtenerKimariteRandom(String[] kimaritesLuchador) {
@@ -24,20 +80,16 @@ public class ControlDojo {
         return kimaritesLuchador[i];
     }
     
-    public static boolean obtenerResultadoRandom() {
+    public boolean obtenerResultadoRandom() {
         int i = ThreadLocalRandom.current().nextInt(10);
         if(i>8){
-            luchadorGano=true;
+            return true;
         }
         else{
-            luchadorGano=false;
+            return false;
         }
-        return luchadorGano;
     }
     
-    public Luchador determinarGanador(){
-        return ganador;
-    }
     
 
     //void subirLuchador(Luchador luchador) {
