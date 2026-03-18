@@ -1,6 +1,8 @@
 
 package pa.peleadesumos.Servidor.Control;
 
+import pa.peleadesumos.Servidor.Modelo.Luchador;
+
 /**
  *
  * @author Asus
@@ -20,6 +22,10 @@ public class SControlPrincipal {
         sControlSocket = new SContolSocket(this);
         sHiloLuchador = new SHiloLuchador(this);
         
+    }
+
+    void subirAlDojo(Luchador luchador) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     
