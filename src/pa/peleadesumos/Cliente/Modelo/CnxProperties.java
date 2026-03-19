@@ -73,18 +73,34 @@ public class CnxProperties {
         nombreCategoria = props.getProperty("categoria." + categoriaId + ".nombre");
     }
 
+    /**
+     * Devuelve la direción IP del servidor
+     * @return String con la dirección IP
+     */
     public static String getIp() {
         return ip;
     }
 
+    /**
+     * Devuelve el puerto del servidor
+     * @return int correspondiente al puerto
+     */
     public static int getPuerto() {
         return puerto;
     }
 
+    /**
+     * Devuelve los kimarites de una categoría específica
+     * @return arreglo de Strings con los kimarites
+     */
     public static String[] getKimarites() {
         return kimarites;
     }
 
+    /**
+     * Devuelve el nombre de una categoría específica
+     * @return String con el nombre de la categoría
+     */
     public static String getNombreCategoria() {
         return nombreCategoria;
     }
