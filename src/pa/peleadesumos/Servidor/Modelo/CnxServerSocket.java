@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 
 /**
- *
+ * Metodos y atributos estaticos
  * @author Asus
  */
 public class CnxServerSocket {
@@ -25,7 +25,7 @@ public class CnxServerSocket {
      * Establece el serverSocket
      * @return serverSocket
      */
-    public ServerSocket conexion(){
+    public static ServerSocket conexion(){
         if(puerto <= 0){
             throw new IllegalStateException("PUERTO_SERVIDOR no configurado");
         }

@@ -1,103 +1,131 @@
-
 package pa.peleadesumos.Servidor.Control;
 
 import java.util.concurrent.ThreadLocalRandom;
 import pa.peleadesumos.Servidor.Modelo.Luchador;
 
-
 /**
+ * Control encargado de gestionar la logica del combate en el dojo. Sincroniza
+ * los dos hilos de los luchadores y determina el ganador.
  *
- * @author Asus
+ * @author Sergio, Asus
  */
 public class ControlDojo {
-    
+
     private SControlPrincipal sControlPrincipal;
-    private Luchador[] luchadores = new Luchador[2];
-    private int contadorLuchadores = 0;
+
+    private Luchador[] luchadores;
+    //contador de luchadores que han llegado al dojo
+    private int contadorLuchadores;
+    //indice del arreglo para definir de cual de los dos luchadores es el turno
+    private int turnoActual;
+    private boolean combateActivo;
+    
     private Luchador ganador;
     private boolean combateTerminado = false;
 
+    /**
+     * Constructor de ControlDojo.
+     *
+     * @param sControlPrincipal control principal del servidor
+     */
     public ControlDojo(SControlPrincipal sControlPrincipal) {
         this.sControlPrincipal = sControlPrincipal;
+        this.luchadores = new Luchador[2];
+        this.contadorLuchadores = 0;
+        this.turnoActual = 0;
+        this.combateActivo = false;
+        this.ganador = null;
     }
 
     /**
-     * Sube un luchador al dohyō. El primero hace wait() hasta que
-     * llegue el segundo. Cuando ambos están, notifyAll() inicia el combate.
-     * @param luchador el luchador que llega al dohyō
-     * @throws InterruptedException si el hilo es interrumpido mientras espera
+     * Sube un luchador al dojo. si ya estan los dos inicia el combate. Si solo
+     * hay uno, espera al segundo luchador
+     *
+     * @param luchador lcuhador a subir al dojito
+     * @throws InterruptedException
+>>>>>>> 875f5667d9cfa2532cfdba931d721d3d8882765f
      */
     public synchronized void subirLuchador(Luchador luchador) throws InterruptedException {
         luchadores[contadorLuchadores] = luchador;
         contadorLuchadores++;
-
+        sControlPrincipal.notificarLlegada(luchador);
         if (contadorLuchadores < 2) {
             wait();
         } else {
+            combateActivo = true;
             notifyAll();
         }
     }
 
     /**
-     * Ejecuta el turno del luchador que lo llama. Solo un hilo puede
-     * estar aquí a la vez gracias a synchronized. El que termina su
-     * movimiento cede la llave con notifyAll() + wait().
-     * @param luchador el luchador que ejecuta el turno
-     * @throws InterruptedException si el hilo es interrumpido mientras espera
+     * Ejecuta el turno del luchador. Espera si no es su turno. Aplica un
+     * kimarite aleatorio y verifica si saca al rival.
+     *
+     * @param luchador luchador que ejecuta el turno
+     * @throws InterruptedException si el hilo es interrumpido
      */
     public synchronized void ejecutarTurno(Luchador luchador) throws InterruptedException {
-        if (combateTerminado) return;
+        int miIndice = luchadores[0] == luchador ? 0 : 1; //primera vez que el operador ternario me sirve de algo
+        int rivalIndice = miIndice == 0 ? 1 : 0;
 
-        String kimarite = obtenerKimariteRandom(luchador.getKimarites());
-        boolean saco = obtenerResultadoRandom();
+        //no olvidar que entra si es true porque es un while lol
+        while (combateActivo) {
 
-        if (saco) {
-            ganador = luchador;
-            combateTerminado = true;
-            notifyAll();
-            return;
+            if (turnoActual == miIndice) {
+                wait(ThreadLocalRandom.current().nextInt(500));
+
+                //EJECUTAR KIMARITEEE
+                String kimarite = obtenerKimariteRandom(luchador.getKimarites());
+                sControlPrincipal.notificarKimarite(luchador, kimarite);
+
+                //verificacion a ver si saco al rival
+                if (obtenerResultadoRandom()) {
+                    ganador = luchador;
+                    combateActivo = false;
+                    sControlPrincipal.notificarGanador(ganador);
+                    notifyAll();
+                } else {
+                    turnoActual = rivalIndice;
+                    notifyAll();
+                    if (combateActivo) {
+                        wait();
+                    }
+                }
+            } else {
+                wait();
+            }
+
         }
-
-        long espera = ThreadLocalRandom.current().nextLong(500);
-        notifyAll();
-        wait(espera);
     }
 
     /**
-     * Retorna el luchador ganador del combate.
-     * @return el luchador que ganó
+     * Retorna un kimarite aleatorio del arreglo del luchador.
+     *
+     * @param kimaritesLuchador arreglo de kimarites del luchador
+     * @return kimarite seleccionado aleatoriamente
+     */
+    public static String obtenerKimariteRandom(String[] kimaritesLuchador) {
+        int i = ThreadLocalRandom.current().nextInt(kimaritesLuchador.length);
+        return kimaritesLuchador[i];
+    }
+
+    /**
+     * Determina aleatoriamente si el kimarite saca al rival del dojo. Hay un
+     * 20% de probabilidad de sacar al rival.
+     *
+     * @return true si saca al rival, false si no
+     */
+    public static boolean obtenerResultadoRandom() {
+        return ThreadLocalRandom.current().nextInt(10) > 7;
+    }
+
+    /**
+     * Retorna el ganador del combate.
+     *
+     * @return luchador ganador
      */
     public Luchador determinarGanador() {
         return ganador;
     }
 
-    public boolean isCombateTerminado() {
-        return combateTerminado;
-    }
-    
-    public static String obtenerKimariteRandom(String[] kimaritesLuchador) {
-        int i = ThreadLocalRandom.current().nextInt(kimaritesLuchador.length);
-        return kimaritesLuchador[i];
-    }
-    
-    public boolean obtenerResultadoRandom() {
-        int i = ThreadLocalRandom.current().nextInt(10);
-        if(i>8){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    
-    
-
-    //void subirLuchador(Luchador luchador) {
-    //    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    //}
-
-    //void ejecutarTurno(Luchador luchador) {
-    //    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    //}
-    
 }

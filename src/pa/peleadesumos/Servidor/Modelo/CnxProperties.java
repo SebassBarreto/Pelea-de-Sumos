@@ -1,6 +1,5 @@
 package pa.peleadesumos.Servidor.Modelo;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -11,62 +10,28 @@ import java.util.Properties;
  */
 public class CnxProperties {
     
-    private File archivo;
-
-    public CnxProperties(File archivo) {
-        this.archivo = archivo;
-    }
+    private static int puerto;
     
     /**
-     * Metodo que conecta con el archivo de propiedades
-     * @return Properties
+     * Carga el archivo properties desde la ruta indicada.
+     * @param ruta ruta del archivo properties
+     * @return objeto Properties cargado
+     * @throws IOException si el archivo no se puede leer
      */
-    public Properties conexion(){
-        
-        try{
-            if(archivo == null){
-                throw new IllegalStateException("No se ha asociado un archivo properties");
-            }
-            
-            if(!archivo.exists() || !archivo.isFile()){
-                throw new IllegalStateException("El archivo .properties no existe o no es válido: " + archivo);
-            }
-            
-            Properties props = new Properties();
-            
-            try(FileInputStream aux = new FileInputStream(archivo)){
-                props.load(aux);
-                return props;
-            }
-        } catch(IOException ioe){
-             throw new RuntimeException("Error al cargar el archivo properties: " + archivo,ioe);
-        }
-       
+    private static Properties cargarProps(String ruta) throws IOException {
+        Properties props = new Properties();
+        FileInputStream fis = new FileInputStream(ruta);
+        props.load(fis);
+        fis.close();
+        return props;
     }
     
-    /**
-     * Metodo para obtener el puerto
-     * @return puerto del servidor
-     */
-    public int getPuerto(){
-            Properties props = conexion();
-            return Integer.parseInt(props.getProperty("PUERTO_SERVIDOR"));
-        }
-    
-    /**
-     * Obtiene el archivo
-     * @return archivo
-     */
-    public File getArchivo(){
-        return archivo;
+    public static void cargaConfioguracion(String ruta) throws IOException{
+        Properties props = cargarProps(ruta);
+        puerto = Integer.parseInt(props.getProperty("PUERTO_SERVIDOR"));
     }
     
-    /**
-     * Asignar un archivo
-     * @param archivo
-     */
-    public void setArchivo(File archivo){
-        this.archivo = archivo;
+    public static int getPuerto(){
+        return puerto;
     }
-    
 }
